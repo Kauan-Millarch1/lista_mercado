@@ -9,7 +9,7 @@ export function ThemeToggle() {
     return (
       <button
         type="button"
-        className="rounded-md border border-border px-3 py-1 text-xs font-semibold uppercase tracking-wide"
+        className="ghost-button px-3 py-1.5 text-xs uppercase tracking-wide"
         aria-hidden
       >
         Theme
@@ -18,15 +18,15 @@ export function ThemeToggle() {
   }
 
   const nextTheme = resolvedTheme === "dark" ? "light" : "dark";
-  const label = resolvedTheme === "dark" ? "Light mode" : "Dark mode";
+  const label = resolvedTheme === "dark" ? "Light" : "Dark";
 
   return (
     <button
       type="button"
-      className="rounded-md border border-border px-3 py-1 text-xs font-semibold uppercase tracking-wide"
+      className="ghost-button px-3 py-1.5 text-xs uppercase tracking-wide"
       onClick={() => setTheme(nextTheme)}
     >
-      {label}
+      Theme: {label}
     </button>
   );
 }

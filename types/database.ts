@@ -3,6 +3,33 @@
 export type Database = {
   public: {
     Tables: {
+      visitors: {
+        Row: {
+          id: string;
+          display_name: string;
+          first_ip: string | null;
+          last_ip: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          display_name: string;
+          first_ip?: string | null;
+          last_ip?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          display_name?: string;
+          first_ip?: string | null;
+          last_ip?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       profiles: {
         Row: {
           id: string;
@@ -33,7 +60,7 @@ export type Database = {
           name: string;
           category: string;
           description: string | null;
-          image_url: string;
+          image_url: string | null;
           unit: string;
           average_price: number;
           created_at: string;
@@ -43,7 +70,7 @@ export type Database = {
           name: string;
           category: string;
           description?: string | null;
-          image_url: string;
+          image_url?: string | null;
           unit: string;
           average_price: number;
           created_at?: string;
@@ -53,7 +80,7 @@ export type Database = {
           name?: string;
           category?: string;
           description?: string | null;
-          image_url?: string;
+          image_url?: string | null;
           unit?: string;
           average_price?: number;
           created_at?: string;
@@ -63,7 +90,7 @@ export type Database = {
       shopping_lists: {
         Row: {
           id: string;
-          user_id: string;
+          visitor_id: string;
           title: string;
           status: "active" | "done";
           created_at: string;
@@ -71,7 +98,7 @@ export type Database = {
         };
         Insert: {
           id?: string;
-          user_id: string;
+          visitor_id: string;
           title: string;
           status?: "active" | "done";
           created_at?: string;
@@ -79,7 +106,7 @@ export type Database = {
         };
         Update: {
           id?: string;
-          user_id?: string;
+          visitor_id?: string;
           title?: string;
           status?: "active" | "done";
           created_at?: string;
@@ -93,7 +120,6 @@ export type Database = {
           list_id: string;
           product_id: string;
           quantity: number;
-          priority: "high" | "medium" | "low";
           note: string | null;
           is_checked: boolean;
           estimated_price: number;
@@ -105,7 +131,6 @@ export type Database = {
           list_id: string;
           product_id: string;
           quantity?: number;
-          priority?: "high" | "medium" | "low";
           note?: string | null;
           is_checked?: boolean;
           estimated_price: number;
@@ -117,7 +142,6 @@ export type Database = {
           list_id?: string;
           product_id?: string;
           quantity?: number;
-          priority?: "high" | "medium" | "low";
           note?: string | null;
           is_checked?: boolean;
           estimated_price?: number;

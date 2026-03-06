@@ -12,10 +12,13 @@ const config: Config = {
       colors: {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+        muted: "hsl(var(--muted))",
+        "muted-foreground": "hsl(var(--muted-foreground))",
         primary: "hsl(var(--primary))",
         secondary: "hsl(var(--secondary))",
         card: "hsl(var(--card))",
-        border: "hsl(var(--border))"
+        border: "hsl(var(--border))",
+        ring: "hsl(var(--ring))"
       }
     }
   },

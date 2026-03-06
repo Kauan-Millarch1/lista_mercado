@@ -1,5 +1,5 @@
-import { redirect } from "next/navigation";
+﻿import { redirect } from "next/navigation";
 
-export default function AppRootPage() {
-  redirect("/app/catalog");
+export default function AppIndexPage() {
+  redirect("/app/dashboard");
 }

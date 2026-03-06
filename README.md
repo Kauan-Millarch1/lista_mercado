@@ -20,7 +20,10 @@ Copy `.env.example` to `.env.local` and fill values:
 
 ## 3) Apply database setup in Supabase SQL editor
 1. Run `supabase/migrations/20260306_000001_init.sql`
-2. Run `supabase/seed.sql`
+2. Run `supabase/migrations/20260306_000002_list_item_priority.sql`
+3. Run `supabase/migrations/20260306_000003_products_image_required.sql`
+4. Run `supabase/migrations/20260306_000004_update_product_images_to_png.sql`
+5. Run `supabase/seed.sql`
 
 ## 4) Run project
 ```bash

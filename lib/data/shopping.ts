@@ -1,48 +1,59 @@
-﻿import type { User } from "@supabase/supabase-js";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+﻿import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { getVisitorIdFromCookie } from "@/lib/visitor/session";
+
+export type CurrentVisitor = {
+  id: string;
+  display_name: string;
+};
 
 export type ActiveListItemView = {
   id: string;
   product_id: string;
   quantity: number;
-  priority: "high" | "medium" | "low";
   note: string | null;
   is_checked: boolean;
   estimated_price: number;
   product_name: string;
   product_unit: string;
-  product_image_url: string | null;
 };
 
 export type ShoppingListView = {
   id: string;
-  user_id: string;
+  visitor_id: string;
   title: string;
   status: "active" | "done";
   created_at: string;
   finalized_at: string | null;
 };
 
-export async function getCurrentUserOrThrow(): Promise<User> {
-  const supabase = await createSupabaseServerClient();
-  const {
-    data: { user }
-  } = await supabase.auth.getUser();
+export async function getCurrentUserOrThrow(): Promise<CurrentVisitor> {
+  const visitorId = await getVisitorIdFromCookie();
 
-  if (!user) {
-    throw new Error("User not authenticated");
+  if (!visitorId) {
+    throw new Error("Visitor not identified");
   }
 
-  return user;
+  const supabase = await createSupabaseServerClient();
+  const { data, error } = await supabase
+    .from("visitors")
+    .select("id, display_name")
+    .eq("id", visitorId)
+    .single();
+
+  if (error || !data) {
+    throw new Error("Visitor not identified");
+  }
+
+  return data;
 }
 
-export async function getOrCreateActiveList(userId: string) {
+export async function getOrCreateActiveList(visitorId: string): Promise<ShoppingListView> {
   const supabase = await createSupabaseServerClient();
 
   const { data: existingList, error: fetchError } = await supabase
     .from("shopping_lists")
-    .select("id, user_id, title, status, created_at, finalized_at")
-    .eq("user_id", userId)
+    .select("id, visitor_id, title, status, created_at, finalized_at")
+    .eq("visitor_id", visitorId)
     .eq("status", "active")
     .order("created_at", { ascending: false })
     .limit(1)
@@ -53,32 +64,32 @@ export async function getOrCreateActiveList(userId: string) {
   }
 
   if (existingList) {
-    return existingList;
+    return existingList as ShoppingListView;
   }
 
   const { data: createdList, error: createError } = await supabase
     .from("shopping_lists")
     .insert({
-      user_id: userId,
-      title: "My Active List",
+      visitor_id: visitorId,
+      title: "Minha Lista Ativa",
       status: "active"
     })
-    .select("id, user_id, title, status, created_at, finalized_at")
+    .select("id, visitor_id, title, status, created_at, finalized_at")
     .single();
 
   if (createError) {
     throw createError;
   }
 
-  return createdList;
+  return createdList as ShoppingListView;
 }
 
-export async function getUserActiveLists(userId: string): Promise<ShoppingListView[]> {
+export async function getUserActiveLists(visitorId: string): Promise<ShoppingListView[]> {
   const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from("shopping_lists")
-    .select("id, user_id, title, status, created_at, finalized_at")
-    .eq("user_id", userId)
+    .select("id, visitor_id, title, status, created_at, finalized_at")
+    .eq("visitor_id", visitorId)
     .eq("status", "active")
     .order("created_at", { ascending: false });
 
@@ -89,13 +100,13 @@ export async function getUserActiveLists(userId: string): Promise<ShoppingListVi
   return (data ?? []) as ShoppingListView[];
 }
 
-export async function getUserActiveListById(userId: string, listId: string): Promise<ShoppingListView | null> {
+export async function getUserActiveListById(visitorId: string, listId: string): Promise<ShoppingListView | null> {
   const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from("shopping_lists")
-    .select("id, user_id, title, status, created_at, finalized_at")
+    .select("id, visitor_id, title, status, created_at, finalized_at")
     .eq("id", listId)
-    .eq("user_id", userId)
+    .eq("visitor_id", visitorId)
     .eq("status", "active")
     .maybeSingle();
 
@@ -110,7 +121,7 @@ export async function getCatalogData() {
   const supabase = await createSupabaseServerClient();
   const { data: products, error } = await supabase
     .from("products")
-    .select("id, name, category, unit, average_price, image_url")
+    .select("id, name, category, unit, average_price")
     .order("category", { ascending: true })
     .order("name", { ascending: true });
 
@@ -118,8 +129,10 @@ export async function getCatalogData() {
     throw error;
   }
 
-  const categories = [...new Set((products ?? []).map((product) => product.category))];
-  return { products: products ?? [], categories };
+  const productRows = (products ?? []) as Array<{ category?: string }>;
+  const categories = [...new Set(productRows.map((product) => String(product.category ?? "")))]
+    .filter((category) => category.length > 0);
+  return { products: (products ?? []) as any[], categories };
 }
 
 export async function getActiveListItems(listId: string): Promise<ActiveListItemView[]> {
@@ -127,7 +140,7 @@ export async function getActiveListItems(listId: string): Promise<ActiveListItem
 
   const { data: listItems, error: itemsError } = await supabase
     .from("list_items")
-    .select("id, product_id, quantity, priority, note, is_checked, estimated_price")
+    .select("id, product_id, quantity, note, is_checked, estimated_price")
     .eq("list_id", listId)
     .order("created_at", { ascending: true });
 
@@ -135,40 +148,49 @@ export async function getActiveListItems(listId: string): Promise<ActiveListItem
     throw itemsError;
   }
 
-  const productIds = (listItems ?? []).map((item) => item.product_id);
+  const listItemRows = (listItems ?? []) as Array<{
+    id: string;
+    product_id: string;
+    quantity: number;
+    note: string | null;
+    is_checked: boolean;
+    estimated_price: number;
+  }>;
+
+  const productIds = listItemRows.map((item) => item.product_id);
   if (productIds.length === 0) {
     return [];
   }
 
   const { data: products, error: productsError } = await supabase
     .from("products")
-    .select("id, name, unit, image_url")
+    .select("id, name, unit")
     .in("id", productIds);
 
   if (productsError) {
     throw productsError;
   }
 
-  const productMap = new Map((products ?? []).map((product) => [product.id, product]));
+  const productRows = (products ?? []) as Array<{ id: string; name: string; unit: string }>;
+  const productMap = new Map(productRows.map((product) => [product.id, product]));
 
-  return (listItems ?? []).map((item) => {
+  return listItemRows.map((item) => {
     const product = productMap.get(item.product_id);
     return {
       ...item,
-      product_name: product?.name ?? "Unknown product",
-      product_unit: product?.unit ?? "unit",
-      product_image_url: product?.image_url ?? null
+      product_name: product?.name ?? "Produto desconhecido",
+      product_unit: product?.unit ?? "unit"
     };
   });
 }
 
-export async function getHistoryData(userId: string) {
+export async function getHistoryData(visitorId: string) {
   const supabase = await createSupabaseServerClient();
 
   const { data: lists, error: listsError } = await supabase
     .from("shopping_lists")
     .select("id, title, finalized_at")
-    .eq("user_id", userId)
+    .eq("visitor_id", visitorId)
     .eq("status", "done")
     .order("finalized_at", { ascending: false });
 
@@ -211,15 +233,15 @@ export async function getHistoryData(userId: string) {
   });
 }
 
-export async function getDashboardData(userId: string) {
+export async function getDashboardData(visitorId: string) {
   const supabase = await createSupabaseServerClient();
-  const activeList = await getOrCreateActiveList(userId);
+  const activeList = await getOrCreateActiveList(visitorId);
   const activeItems = await getActiveListItems(activeList.id);
 
   const { data: doneLists, error: doneListsError } = await supabase
     .from("shopping_lists")
     .select("id")
-    .eq("user_id", userId)
+    .eq("visitor_id", visitorId)
     .eq("status", "done");
 
   if (doneListsError) {
@@ -227,7 +249,7 @@ export async function getDashboardData(userId: string) {
   }
 
   const doneListIds = (doneLists ?? []).map((list) => list.id);
-  let topProductLabel = "No purchases yet";
+  let topProductLabel = "Sem compras ainda";
 
   if (doneListIds.length > 0) {
     const { data: doneItems, error: doneItemsError } = await supabase
@@ -260,7 +282,7 @@ export async function getDashboardData(userId: string) {
         .eq("id", mostFrequentProductId)
         .maybeSingle();
 
-      topProductLabel = topProduct?.name ?? "Unknown";
+      topProductLabel = topProduct?.name ?? "Desconhecido";
     }
   }
 

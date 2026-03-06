@@ -10,8 +10,8 @@ export function FeedbackBanner({ status, message }: FeedbackBannerProps) {
 
   const isSuccess = status === "success";
   const styles = isSuccess
-    ? "border-emerald-300 bg-emerald-50 text-emerald-800"
-    : "border-red-300 bg-red-50 text-red-800";
+    ? "border-emerald-500/25 bg-emerald-500/10 text-emerald-800 dark:text-emerald-300"
+    : "border-red-500/25 bg-red-500/10 text-red-800 dark:text-red-300";
 
-  return <div className={`rounded-md border px-3 py-2 text-sm ${styles}`}>{message}</div>;
+  return <div className={`rounded-xl border px-3 py-2 text-sm shadow-sm ${styles}`}>{message}</div>;
 }

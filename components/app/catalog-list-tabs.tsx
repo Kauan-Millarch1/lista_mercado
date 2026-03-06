@@ -11,20 +11,22 @@ export function CatalogListTabs({ activeTab, listId }: CatalogListTabsProps) {
   const listHref = listId ? `/app/list?listId=${listId}` : "/app/list";
 
   return (
-    <div className="inline-flex rounded-lg border border-border bg-card p-1">
+    <div className="inline-flex rounded-xl border border-border bg-card p-1 shadow-sm">
       <Link
         href={catalogHref as Route}
-        className={`rounded-md px-3 py-1.5 text-sm ${
-          activeTab === "catalog" ? "bg-primary text-white" : "text-foreground/80"
+        className={`rounded-lg px-4 py-2 text-xs font-semibold uppercase tracking-wide transition-colors ${
+          activeTab === "catalog" ? "bg-primary text-white" : "text-foreground/75 hover:bg-muted/70"
         }`}
       >
-        Catalog
+        Catalogo
       </Link>
       <Link
         href={listHref as Route}
-        className={`rounded-md px-3 py-1.5 text-sm ${activeTab === "list" ? "bg-primary text-white" : "text-foreground/80"}`}
+        className={`rounded-lg px-4 py-2 text-xs font-semibold uppercase tracking-wide transition-colors ${
+          activeTab === "list" ? "bg-primary text-white" : "text-foreground/75 hover:bg-muted/70"
+        }`}
       >
-        Active List
+        Lista Ativa
       </Link>
     </div>
   );

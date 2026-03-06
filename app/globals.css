@@ -5,27 +5,63 @@
 :root {
   --background: 60 20% 96%;
   --foreground: 220 20% 16%;
+  --muted: 210 16% 93%;
+  --muted-foreground: 220 12% 40%;
   --primary: 174 76% 26%;
   --secondary: 48 89% 49%;
   --card: 0 0% 100%;
   --border: 215 16% 82%;
+  --ring: 174 76% 26%;
 }
 
 .dark {
   --background: 224 22% 12%;
   --foreground: 220 15% 93%;
+  --muted: 223 18% 20%;
+  --muted-foreground: 220 10% 74%;
   --primary: 170 80% 46%;
   --secondary: 48 96% 56%;
   --card: 224 20% 16%;
   --border: 218 16% 26%;
+  --ring: 170 80% 46%;
 }
 
 body {
   background: hsl(var(--background));
   color: hsl(var(--foreground));
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-family: var(--font-manrope), "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 a {
   color: inherit;
+}
+
+* {
+  border-color: hsl(var(--border));
+}
+
+::selection {
+  background: hsl(var(--primary) / 0.2);
+}
+
+@layer components {
+  .surface-card {
+    @apply rounded-2xl border border-border bg-card shadow-sm;
+  }
+
+  .surface-card-hover {
+    @apply transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md;
+  }
+
+  .soft-input {
+    @apply rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none transition-all duration-150 placeholder:text-foreground/45 focus-visible:ring-2 focus-visible:ring-primary/40;
+  }
+
+  .soft-button {
+    @apply rounded-lg bg-primary px-3 py-2 text-sm font-semibold text-white transition-all duration-150 hover:opacity-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40;
+  }
+
+  .ghost-button {
+    @apply rounded-lg border border-border bg-card px-3 py-2 text-sm font-medium transition-all duration-150 hover:bg-muted/60;
+  }
 }
