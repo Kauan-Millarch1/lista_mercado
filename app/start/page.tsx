@@ -13,10 +13,14 @@ export default async function StartPage({ searchParams }: StartPageProps) {
   const visitorId = await getVisitorIdFromCookie();
 
   if (visitorId) {
-    const supabase = await createSupabaseServerClient();
-    const { data } = await supabase.from("visitors").select("id").eq("id", visitorId).maybeSingle();
-    if (data) {
-      redirect("/app/dashboard");
+    try {
+      const supabase = await createSupabaseServerClient();
+      const { data } = await supabase.from("visitors").select("id").eq("id", visitorId).maybeSingle();
+      if (data) {
+        redirect("/app/dashboard");
+      }
+    } catch {
+      // Ignore and keep rendering start page to allow a new session.
     }
   }
 

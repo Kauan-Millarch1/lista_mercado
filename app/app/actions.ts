@@ -44,42 +44,51 @@ export async function startVisitorSessionAction(formData: FormData) {
     redirectToPath(buildRedirect("/start", { status: "error", message: "Informe um nome valido." }));
   }
 
-  const displayName = displayNameInput;
-  const supabase = await createSupabaseServerClient();
-  const visitorIdFromCookie = await getVisitorIdFromCookie();
-  const ip = await getRequestIp();
+  try {
+    const displayName = displayNameInput;
+    const supabase = await createSupabaseServerClient();
+    const visitorIdFromCookie = await getVisitorIdFromCookie();
+    const ip = await getRequestIp();
 
-  if (visitorIdFromCookie) {
-    const { error: updateError } = await supabase
-      .from("visitors")
-      .update({
-        display_name: displayName,
-        last_ip: ip,
-        updated_at: new Date().toISOString()
-      })
-      .eq("id", visitorIdFromCookie);
+    if (visitorIdFromCookie) {
+      const { error: updateError } = await supabase
+        .from("visitors")
+        .update({
+          display_name: displayName,
+          last_ip: ip,
+          updated_at: new Date().toISOString()
+        })
+        .eq("id", visitorIdFromCookie);
 
-    if (!updateError) {
-      redirect("/app/dashboard");
+      if (!updateError) {
+        redirect("/app/dashboard");
+      }
     }
+
+    const { data, error } = await supabase
+      .from("visitors")
+      .insert({
+        display_name: displayName,
+        first_ip: ip,
+        last_ip: ip
+      })
+      .select("id")
+      .single();
+
+    if (error) {
+      throw error;
+    }
+
+    await setVisitorIdCookie(data.id);
+    redirect("/app/dashboard");
+  } catch {
+    redirectToPath(
+      buildRedirect("/start", {
+        status: "error",
+        message: "Erro ao iniciar sessao. Verifique as variaveis da Vercel e tente novamente."
+      })
+    );
   }
-
-  const { data, error } = await supabase
-    .from("visitors")
-    .insert({
-      display_name: displayName,
-      first_ip: ip,
-      last_ip: ip
-    })
-    .select("id")
-    .single();
-
-  if (error) {
-    throw error;
-  }
-
-  await setVisitorIdCookie(data.id);
-  redirect("/app/dashboard");
 }
 
 export async function clearVisitorSessionAction() {
