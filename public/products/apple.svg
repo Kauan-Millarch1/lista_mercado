@@ -1,0 +1,10 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200' role='img' aria-label='Apple'>
+  <defs>
+    <filter id='shadow' x='-20%' y='-20%' width='140%' height='140%'>
+      <feDropShadow dx='0' dy='4' stdDeviation='4' flood-color='#111827' flood-opacity='0.25'/>
+    </filter>
+  </defs>
+  <g filter='url(#shadow)'>
+    <path d='M98 54 C72 52 58 74 58 98 C58 126 78 148 100 148 C122 148 142 126 142 98 C142 74 126 52 102 54 Z' fill='#dc2626'/><path d='M102 54 C112 42 124 42 132 48' stroke='#991b1b' stroke-width='6' stroke-linecap='round' fill='none'/>
+  </g>
+</svg>

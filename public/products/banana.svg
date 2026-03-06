@@ -1,0 +1,10 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200' role='img' aria-label='Banana'>
+  <defs>
+    <filter id='shadow' x='-20%' y='-20%' width='140%' height='140%'>
+      <feDropShadow dx='0' dy='4' stdDeviation='4' flood-color='#111827' flood-opacity='0.25'/>
+    </filter>
+  </defs>
+  <g filter='url(#shadow)'>
+    <path d='M54 96 C72 128 112 142 146 122 C120 142 84 146 58 124 C46 114 40 102 42 90 C44 86 50 86 54 96 Z' fill='#facc15'/><path d='M58 98 C72 120 104 130 132 116' stroke='#ca8a04' stroke-width='6' stroke-linecap='round' fill='none'/>
+  </g>
+</svg>
