@@ -64,4 +64,24 @@ a {
   .ghost-button {
     @apply rounded-lg border border-border bg-card px-3 py-2 text-sm font-medium transition-all duration-150 hover:bg-muted/60;
   }
+
+  .card-success-feedback {
+    animation: card-success-feedback 420ms ease-in-out both;
+  }
+}
+
+@keyframes card-success-feedback {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  35% {
+    border-color: rgba(74, 222, 128, 0.9);
+    background: linear-gradient(140deg, rgba(74, 222, 128, 0.22), rgba(16, 185, 129, 0.18));
+    box-shadow: 0 0 0 1px rgba(74, 222, 128, 0.25), 0 14px 36px rgba(16, 185, 129, 0.25);
+  }
+  100% {
+    transform: translateY(-8px) scale(0.97);
+    opacity: 0;
+  }
 }
