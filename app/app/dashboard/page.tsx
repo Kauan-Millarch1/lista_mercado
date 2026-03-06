@@ -1,4 +1,4 @@
-import { getCurrentUserOrThrow, getDashboardData } from "@/lib/data/shopping";
+﻿import { getCurrentUserOrThrow, getDashboardData } from "@/lib/data/shopping";
 
 export default async function DashboardPage() {
   const user = await getCurrentUserOrThrow();
@@ -13,16 +13,16 @@ export default async function DashboardPage() {
 
   return (
     <section className="space-y-6">
-      <header className="surface-card bg-gradient-to-br from-card via-card to-muted/35 p-5">
-        <h1 className="text-3xl font-semibold tracking-tight">Painel</h1>
-        <p className="mt-1 text-sm text-foreground/70">Visao rapida do seu comportamento de compra e gasto atual.</p>
+      <header className="rounded-2xl border border-white/15 bg-white/[0.08] p-6 shadow-[0_16px_40px_rgba(0,0,0,0.35)] backdrop-blur-xl">
+        <h1 className="text-3xl font-semibold tracking-tight text-white">Painel</h1>
+        <p className="mt-1 text-sm text-white/75">Visao rapida do seu comportamento de compra e gasto atual.</p>
       </header>
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {metrics.map((metric) => (
-          <article key={metric.label} className="surface-card surface-card-hover p-4">
-            <p className="text-xs font-semibold uppercase tracking-wide text-foreground/60">{metric.label}</p>
-            <p className="mt-2 text-2xl font-semibold leading-tight">{metric.value}</p>
+          <article key={metric.label} className="rounded-2xl border border-white/15 bg-slate-950/55 p-4 text-white shadow-[0_12px_32px_rgba(0,0,0,0.35)] backdrop-blur">
+            <p className="text-xs font-semibold uppercase tracking-wide text-white/60">{metric.label}</p>
+            <p className="mt-2 text-2xl font-semibold leading-tight text-white">{metric.value}</p>
           </article>
         ))}
       </div>

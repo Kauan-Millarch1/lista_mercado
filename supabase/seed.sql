@@ -1,15 +1,15 @@
 insert into public.products (name, category, description, image_url, unit, average_price)
 values
-  ('Tomato', 'Vegetables & Greens', 'Fresh red tomato', '/products/tomato.png', 'kg', 2.50),
-  ('Onion', 'Vegetables & Greens', 'White onion', '/products/onion.png', 'kg', 1.90),
-  ('Banana', 'Fruits', 'Silver banana', '/products/banana.png', 'kg', 1.80),
-  ('Apple', 'Fruits', 'Red apple', '/products/apple.png', 'kg', 3.20),
-  ('Chicken Breast', 'Meat & Poultry', 'Skinless breast', '/products/chicken-breast.png', 'kg', 6.40),
-  ('Ground Beef', 'Meat & Poultry', 'Lean ground beef', '/products/ground-beef.png', 'kg', 7.10),
-  ('Milk', 'Dairy & Eggs', 'Whole milk', '/products/milk.png', 'L', 1.40),
-  ('Eggs', 'Dairy & Eggs', 'Chicken eggs pack', '/products/eggs.png', 'unit', 3.60),
-  ('Rice', 'Bakery & Grains', 'White rice pack', '/products/rice.png', 'kg', 2.20),
-  ('Beans', 'Bakery & Grains', 'Carioca beans', '/products/beans.png', 'kg', 2.80),
-  ('Sparkling Water', 'Beverages', 'Sparkling water bottle', '/products/sparkling-water.png', 'L', 1.10),
-  ('Orange Juice', 'Beverages', 'Natural juice bottle', '/products/orange-juice.png', 'L', 2.70)
+  ('Tomate', 'Verduras e Legumes', 'Tomate fresco vermelho', '/products/tomato.png', 'kg', 2.50),
+  ('Cebola', 'Verduras e Legumes', 'Cebola branca', '/products/onion.png', 'kg', 1.90),
+  ('Banana', 'Frutas', 'Banana prata', '/products/banana.png', 'kg', 1.80),
+  ('Maca', 'Frutas', 'Maca vermelha', '/products/apple.png', 'kg', 3.20),
+  ('Peito de Frango', 'Carnes e Aves', 'Peito de frango sem pele', '/products/chicken-breast.png', 'kg', 6.40),
+  ('Carne Moida', 'Carnes e Aves', 'Carne moida magra', '/products/ground-beef.png', 'kg', 7.10),
+  ('Leite', 'Laticinios e Ovos', 'Leite integral', '/products/milk.png', 'L', 1.40),
+  ('Ovos', 'Laticinios e Ovos', 'Bandeja de ovos de galinha', '/products/eggs.png', 'unidade', 3.60),
+  ('Arroz', 'Padaria e Graos', 'Pacote de arroz branco', '/products/rice.png', 'kg', 2.20),
+  ('Feijao', 'Padaria e Graos', 'Feijao carioca', '/products/beans.png', 'kg', 2.80),
+  ('Agua com Gas', 'Bebidas', 'Garrafa de agua com gas', '/products/sparkling-water.png', 'L', 1.10),
+  ('Suco de Laranja', 'Bebidas', 'Garrafa de suco natural', '/products/orange-juice.png', 'L', 2.70)
 on conflict do nothing;
